@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<imod version="1.0.0" acquisition_period="600">
+
+    <!-- rs485 off here for testing ! -->
+    
+    <group name="Channel definitions">
+        <source-channel name="NPE_io">
+            <protocol name="HARDWARE"/>
+            <gap>1ms</gap>
+            <cycle>100ms</cycle>
+        </source-channel>
+
+        <!-- temporarely eexcluded, problems with rs485 
+        
+        <source-channel name="Modbus_M1">
+            <protocol name="MODBUS"/>
+            <port>"com3-19200-8E1"</port>
+            <gap>0</gap>
+            <cycle>250 ms</cycle> 
+            <read-timeout>200ms</read-timeout>
+        </source-channel>
+        -->
+        
+        <source-channel name="OneWire">
+            <protocol name="ONEWIRE"/>
+            <port>"ET-0.0.0.0"</port>
+            <gap>0</gap>
+            <cycle>10</cycle>
+        </source-channel>
+        
+        <access-channel name="Modbus_S1">
+            <protocol name="MODBUS" />
+            <port>"ET-502-TCP"</port>
+            <property name="device-id" value="1" />
+        </access-channel>
+    
+        <message-channel name="ForceWrite_400">
+             <protocol name="forcewrite"/>
+             <recipient>"400"</recipient>
+        </message-channel>
+        <message id="Count_400">
+           <![CDATA[
+           "REG_INCREMENT[400]"
+           ]]>
+        </message>
+
+        <message-channel name="ForceWrite_402">
+             <protocol name="forcewrite"/>
+             <recipient>"402"</recipient>
+        </message-channel>
+        <message id="Count_402">
+           <![CDATA[
+           "REG_INCREMENT[402]"
+           ]]>
+        </message>
+
+        <message-channel name="ForceWrite_404">
+             <protocol name="forcewrite"/>
+             <recipient>"404"</recipient>
+        </message-channel>
+        <message id="Count_404">
+           <![CDATA[
+           "REG_INCREMENT[404]"
+           ]]>
+        </message>
+
+        <message-channel name="ForceWrite_406">
+             <protocol name="forcewrite"/>
+             <recipient>"406"</recipient>
+        </message-channel>
+        <message id="Count_406">
+           <![CDATA[
+           "REG_INCREMENT[406]"
+           ]]>
+        </message>
+
+        <message-channel name="ForceWrite_408">
+             <protocol name="forcewrite"/>
+             <recipient>"408"</recipient>
+        </message-channel>
+        <message id="Count_408">
+           <![CDATA[
+           "REG_INCREMENT[408]"
+           ]]>
+        </message>
+
+        <message-channel name="ForceWrite_410">
+             <protocol name="forcewrite"/>
+             <recipient>"410"</recipient>
+        </message-channel>
+        <message id="Count_410">
+           <![CDATA[
+           "REG_INCREMENT[402]"
+           ]]>
+        </message>
+
+        <!-- the rest of the counters are not local, so no message channel needed -->
+        
+    </group>
+
+    
+    <group name="local outputs">  
+        <parameter>
+            <id>"100"</id>
+            <description>"DO1"</description>
+            <init-value>"0"</init-value>
+            <source-channel channel-name="NPE_io" parameter-id="DO1"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="100"/>
+        </parameter>
+
+        <parameter>
+            <id>"101"</id>
+            <description>"DO2"</description>
+            <init-value>"0"</init-value>
+            <source-channel channel-name="NPE_io" parameter-id="DO2"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="101"/>
+        </parameter>
+
+        <!-- name below is po3 not do3! -->
+        
+        <parameter>
+            <id>"102"</id>
+            <description>"DO3"</description>
+            <init-value>"0"</init-value>
+            <source-channel channel-name="NPE_io" parameter-id="PO3"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="102"/>
+        </parameter>
+
+        <parameter>
+            <id>"103"</id>
+            <description>"DO4"</description>
+            <init-value>"0"</init-value>
+            <source-channel channel-name="NPE_io" parameter-id="PO4"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="103"/>
+        </parameter>
+    </group>
+
+    
+    
+    <group name="local inputs">  
+ 
+        <parameter>
+            <id>"200"</id>
+            <description>"DI1"</description>
+            <source-channel channel-name="NPE_io" parameter-id="DI1"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="200"/>
+            <event type="LoAlarm">
+                <message-channel channel-name="ForceWrite_400"/>
+                <message-id>"Count_400"</message-id>
+                <property name="trigger" value="1"/>
+            </event>
+        </parameter>
+
+        <parameter>
+            <id>"201"</id>
+            <description>"DI2"</description>
+            <source-channel channel-name="NPE_io" parameter-id="DI2"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="201"/>
+            <event type="LoAlarm">
+                <message-channel channel-name="ForceWrite_402"/>
+                <message-id>"Count_402"</message-id>
+                <property name="trigger" value="1"/>
+            </event>
+        </parameter>
+
+        <parameter>
+            <id>"202"</id>
+            <description>"DI3"</description>
+            <source-channel channel-name="NPE_io" parameter-id="DI3"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="202"/>
+            <event type="LoAlarm">
+                <message-channel channel-name="ForceWrite_404"/>
+                <message-id>"Count_404"</message-id>
+                <property name="trigger" value="1"/>
+            </event>
+        </parameter>
+
+        <parameter>
+            <id>"203"</id>
+            <description>"DI4"</description>
+            <source-channel channel-name="NPE_io" parameter-id="DI4"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="203"/>
+            <event type="LoAlarm">
+                <message-channel channel-name="ForceWrite_406"/>
+                <message-id>"Count_406"</message-id>
+                <property name="trigger" value="1"/>
+            </event>
+        </parameter>
+
+        <parameter>
+            <id>"204"</id>
+            <description>"DI5"</description>
+            <source-channel channel-name="NPE_io" parameter-id="DI5"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="204"/>
+            <event type="LoAlarm">
+                <message-channel channel-name="ForceWrite_408"/>
+                <message-id>"Count_408"</message-id>
+                <property name="trigger" value="1"/>
+            </event>
+        </parameter>
+
+        <parameter>
+            <id>"205"</id>
+            <description>"DI6"</description>
+            <source-channel channel-name="NPE_io" parameter-id="DI6"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="205"/>
+            <event type="LoAlarm">
+                <message-channel channel-name="ForceWrite_410"/>
+                <message-id>"Count_410"</message-id>
+                <property name="trigger" value="1"/>
+            </event>
+        </parameter>
+
+    <!-- the following di is NOT used for counter, no event -->
+        <parameter>
+            <id>"206"</id>
+            <description>"DI7"</description>
+            <source-channel channel-name="NPE_io" parameter-id="DI7"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="206"/>
+        </parameter>
+        
+    </group>
+    
+    <group name="local ai, 1w">
+<!-- AI channels - kanalite jarjestus olgu pidev, siis saab korraga kysida  -->
+
+        <parameter>
+            <id>"500"</id>
+            <description>"AI1"</description>
+            <source-channel channel-name="NPE_io" parameter-id="AI1"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="500"/>
+        </parameter>
+        
+        <parameter>
+            <id>"501"</id>
+            <description>"AI2"</description>
+            <source-channel channel-name="NPE_io" parameter-id="AI2"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="501"/>
+        </parameter>
+        
+        <parameter>
+            <id>"502"</id>
+            <description>"AI3"</description>
+            <source-channel channel-name="NPE_io" parameter-id="AI3"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="502"/>
+        </parameter>
+        
+        <parameter>
+            <id>"503"</id>
+            <description>"AI4"</description>
+            <source-channel channel-name="NPE_io" parameter-id="AIV"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="503"/>
+        </parameter>
+        
+    <!-- 1wire sensors , read 2 registers here! -->
+    
+        <parameter type="real32">
+            <id>"504"</id>
+            <description>"THERMOMETER_DS18B20"</description>
+            <source-channel channel-name="OneWire" parameter-id="289437A9020000:temperature"/>
+            <access-channel channel-name="Modbus_S1" parameter-id="504"/>
+        </parameter>
+     
+    </group>
+
+
+    
+    
+    
+    <group name="counters both local and on RS485">  
+      
+        <parameter type='word32'>
+            <id>"400"</id>
+            <description>"Counter for DI1"</description>
+            <access-channel channel-name="Modbus_S1" parameter-id="400" />
+        </parameter>
+    
+        <parameter type='word32'>
+            <id>"402"</id>
+            <description>"Counter for DI2"</description>
+            <access-channel channel-name="Modbus_S1" parameter-id="402" />
+        </parameter>
+    
+        <parameter type='word32'>
+            <id>"404"</id>
+            <description>"Counter for DI3"</description>
+            <access-channel channel-name="Modbus_S1" parameter-id="404" />
+        </parameter>
+    
+        <parameter type='word32'>
+            <id>"406"</id>
+            <description>"Counter for DI4"</description>
+            <access-channel channel-name="Modbus_S1" parameter-id="406" />
+        </parameter>
+   
+        <parameter type='word32'>
+            <id>"408"</id>
+            <description>"Counter for DI5"</description>
+            <access-channel channel-name="Modbus_S1" parameter-id="408" />
+        </parameter>
+   
+        <parameter type='word32'>
+            <id>"410"</id>
+            <description>"Counter for DI6"</description>
+            <access-channel channel-name="Modbus_S1" parameter-id="410" />
+        </parameter>
+   
+        <!-- di7 is not used as counter
+        <parameter type='word32'>
+            <id>"412"</id>
+            <description>"Counter for DI7"</description>
+            <access-channel channel-name="Modbus_S1" parameter-id="412" />
+        </parameter>
+        -->
+        
+        <!-- devices on rs485 follow --
+        
+        <parameter type="word32">
+            <id>"412"</id>
+            <description>"counter on rs485 4.1"</description>
+            <source-channel channel-name="Modbus_M1" parameter-id="1" >
+                <property name="device-id" value="4"/>
+            </source-channel>
+            <access-channel channel-name="Modbus_S1" parameter-id="412"/>
+        </parameter>
+        
+        <parameter type="word32">
+            <id>"414"</id>
+            <description>"counter on rs485 4.3"</description>
+            <source-channel channel-name="Modbus_M1" parameter-id="3" >
+                <property name="device-id" value="4"/>
+            </source-channel>
+            <access-channel channel-name="Modbus_S1" parameter-id="414"/>
+        </parameter>
+        
+        <parameter type="word32">
+            <id>"416"</id>
+            <description>"counter on rs485 4.5"</description>
+            <source-channel channel-name="Modbus_M1" parameter-id="5" >
+                <property name="device-id" value="4"/>
+            </source-channel>
+            <access-channel channel-name="Modbus_S1" parameter-id="416"/>
+        </parameter>
+        -->
+        
+    </group>
+        
+    
+    
+</imod>
+
