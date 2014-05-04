@@ -6,10 +6,10 @@
 
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE aochannels(mba,regadd,bootvalue,value,ts,rule,desc,comment); -- one line per register bit (coil). 15 columns.  NO ts???
+CREATE TABLE aochannels(mba,regadd,bootvalue,value,ts,rule,desc,comment,mbi integer); -- one line per register bit (coil). 15 columns.  NO ts???
 
--- INSERT INTO "aochannels" VALUES('1','400','','1','','','counter simulating ao','test'); -- ao kirj test 
--- INSERT INTO "aochannels" VALUES('1','401','','1','','','counter simulating ao','test'); -- ao kirj test member2
+-- INSERT INTO "aochannels" VALUES('1','400','','1','','','counter simulating ao','test',0); -- ao kirj test 
+-- INSERT INTO "aochannels" VALUES('1','401','','1','','','counter simulating ao','test',0); -- ao kirj test member2
 
 CREATE UNIQUE INDEX do_mbareg on 'aochannels'(mba,regadd); -- you need to put a name to the channel even if you do not plan to report it
 

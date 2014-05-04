@@ -4,7 +4,7 @@
 
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE dochannels(mba,regadd,bit,bootvalue,value,rule,desc,comment); -- one line per register bit (coil). 15 columns.  NO ts???
+CREATE TABLE dochannels(mba,regadd,bit,bootvalue,value,rule,desc,comment,mbi integer); -- one line per register bit (coil). 15 columns.  NO ts???
 -- every level controlled output must have his line. pulse and pwm goes without it. pwm and level may conflict!!!
 
 -- regvalue is read from register, value is the one we want the register to be (written by app). write value to register to make regvalue equal!
@@ -13,12 +13,12 @@ CREATE TABLE dochannels(mba,regadd,bit,bootvalue,value,rule,desc,comment); -- on
 -- it is possible to combine values from different modbus slaves and registers into one service. 
 -- possible status values are 0..3
 
--- INSERT INTO "dochannels" VALUES('1','0','0','0','0','','output ADO1','do 1'); 
--- INSERT INTO "dochannels" VALUES('1','0','1','0','0','','output ADO2','do 2'); 
-INSERT INTO "dochannels" VALUES('1','100','0','0','0','','output DO1','sisselylitus'); -- vent
--- INSERT INTO "dochannels" VALUES('1','0','0','0','0','','output DO1','relee sisse'); 
+-- INSERT INTO "dochannels" VALUES('1','0','0','0','0','','output ADO1','do 1',0); 
+-- INSERT INTO "dochannels" VALUES('1','0','0','0','1','','output ADO2','do 2',0); -- value in file = bootvalue!
+INSERT INTO "dochannels" VALUES('1','100','0','0','0','','output DO1','sisselylitus',0); -- kontaktor
+-- INSERT INTO "dochannels" VALUES('1','0','0','0','0','','output DO1','relee sisse',0); 
 
-CREATE UNIQUE INDEX do_mbaregbit on 'dochannels'(mba,regadd,bit); -- you need to put a name to the channel even if you do not plan to report it
+CREATE UNIQUE INDEX do_mbaregbit on 'dochannels'(mbi,mba,regadd,bit); -- 
 
 -- the rule number column is provided just in case some application needs them. should be uniquely indexed!
 -- NB but register addresses and bits can be on different lines, to be members of different services AND to be controlled by different rules!!!

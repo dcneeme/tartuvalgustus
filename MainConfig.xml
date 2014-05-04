@@ -10,7 +10,8 @@
             <cycle>100ms</cycle>
         </source-channel>
 
-        <!-- temporarely eexcluded, problems with rs485 
+        <!-- temporarely excluded, problems with rs485. 
+        but it's better to use modbusd instead anyway, more than 10 times faster!
         
         <source-channel name="Modbus_M1">
             <protocol name="MODBUS"/>
@@ -34,6 +35,7 @@
             <property name="device-id" value="1" />
         </access-channel>
     
+        <!-- throw out the unusable counters  
         <message-channel name="ForceWrite_400">
              <protocol name="forcewrite"/>
              <recipient>"400"</recipient>
@@ -43,7 +45,7 @@
            "REG_INCREMENT[400]"
            ]]>
         </message>
-
+        
         <message-channel name="ForceWrite_402">
              <protocol name="forcewrite"/>
              <recipient>"402"</recipient>
@@ -90,11 +92,11 @@
         </message-channel>
         <message id="Count_410">
            <![CDATA[
-           "REG_INCREMENT[402]"
+           "REG_INCREMENT[410]"
            ]]>
         </message>
 
-        <!-- the rest of the counters are not local, so no message channel needed -->
+        usable counters are on rs485, not local, so no message channels needed above -->
         
     </group>
 
@@ -266,8 +268,9 @@
 
     
     
+    <!-- counters of npe are unusable 
     
-    <group name="counters both local and on RS485">  
+    <group name="counters local npe_io">  
       
         <parameter type='word32'>
             <id>"400"</id>
@@ -341,11 +344,11 @@
             </source-channel>
             <access-channel channel-name="Modbus_S1" parameter-id="416"/>
         </parameter>
-        -->
+       
         
     </group>
         
-    
+    -->
     
 </imod>
 
