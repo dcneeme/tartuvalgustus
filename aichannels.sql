@@ -27,17 +27,20 @@ CREATE TABLE aichannels(mba,regadd,val_reg,member,cfg,x1,x2,y1,y2,outlo,outhi,av
 -- INSERT INTO "aichannels" VALUES('','','T1W','2','0','0','100','0','100','0','','1','','0','150','0','','temp channel 2','',4,0); -- min warntemp sensor near hum sensor
 -- INSERT INTO "aichannels" VALUES('','','T1W','3','0','0','100','0','100','0','','1','','0','330','0','','temp channel 3','',4,0); -- max warn
 
-INSERT INTO "aichannels" VALUES('1','500','BTW','1','17','0','1000','0','1000','0','600','3','','','110','0','','via reg 255.350.x','',3,0); -- akupinge
+INSERT INTO "aichannels" VALUES('1','501','LAW','1','0','0','600','0','100','10','20','2','','00','0','0','','','',3,0); -- ai3, valgusandur analogue npe, 2uA/lx, 10k
+-- npe ai on umbes 3.45 mV kvandile. 4,11V= 1189 kvanti. see vastab 200 lx, ehk jagamine 6:1
+INSERT INTO "aichannels" VALUES('','','LAW','2','0','0','100','0','100','0','','1','','0','10','0','','','',3,0); -- ai3, valgusandur threshold on
+INSERT INTO "aichannels" VALUES('','','LAW','3','0','0','100','0','100','0','','1','','0','20','0','','','',3,0); -- ai3, valgusadnur threshold off
+
+INSERT INTO "aichannels" VALUES('1','500','BTW','1','17','0','100','0','1000','0','600','3','','','110','0','','battery voltage','',3,0); -- akupinge npe
+-- 4 v umbes 1189, vastab aga 12v akupingele, seega korruta adc valjund kymnega. 
 INSERT INTO "aichannels" VALUES('','','BTW','2','0','0','100','0','100','0','','1','','0','0','0','','batt temp limit','',3,0); -- just a line on the graph
 INSERT INTO "aichannels" VALUES('','','BTW','3','0','0','100','0','100','0','','1','','0','600','0','','batt temp limit','',3,0); -- just a line on the graph
 
-INSERT INTO "aichannels" VALUES('1','501','T1W','1','0','0','1000','0','1000','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur
+INSERT INTO "aichannels" VALUES('1','502','T1W','1','0','0','1000','0','1000','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur npe
 INSERT INTO "aichannels" VALUES('','','T1W','2','0','0','1000','0','1000','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur
 INSERT INTO "aichannels" VALUES('','','T1W','3','0','0','1000','0','1000','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur
 
-INSERT INTO "aichannels" VALUES('1','502','LAW','1','0','0','100','0','100','10','20','2','','00','0','0','','','',3,0); -- ai3, valgusandur analogue
-INSERT INTO "aichannels" VALUES('','','LAW','2','0','0','100','0','100','0','','1','','0','10','0','','','',3,0); -- ai3, valgusandur threshold on
-INSERT INTO "aichannels" VALUES('','','LAW','3','0','0','100','0','100','0','','1','','0','20','0','','','',3,0); -- ai3, valgusadnur threshold off
 
 -- INSERT INTO "aichannels" VALUES('1','503','A3V','1','0','0','100','0','100','0','','1','','0','20','0','','','',3,0); -- ai4
 
