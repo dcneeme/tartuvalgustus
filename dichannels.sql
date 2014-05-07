@@ -31,11 +31,13 @@ INSERT INTO "dichannels" VALUES('','','0','LRW','3','17','0','0','0','0','','kal
 INSERT INTO "dichannels" VALUES('','','0','LRW','4','17','0','0','0','0','','kaugjuhtimine','20','',0,0); -- 
 -- siin tuleks midagi valja moelda et kui relee olek ei klapi teiste ORTiga, siis status 2 kuidagi kuhugi!
 
-INSERT INTO "dichannels" VALUES('1','200','0','BRS','1','18','0','0','0','0','','door','20','',0,0); -- uks di7
+INSERT INTO "dichannels" VALUES('1','200','0','BRS','1','18','0','0','0','0','','door','20','',0,0); -- uks di1
 
-INSERT INTO "dichannels" VALUES('1','201','0','LSW','1','16','0','0','0','0','','L sens1','20','',0,0); -- lighting sensor bin
+INSERT INTO "dichannels" VALUES('1','201','0','LSW','1','16','0','0','0','0','','L sens1','20','',0,0); -- lighting sensor bin di2
 INSERT INTO "dichannels" VALUES('','','0','LSW','2','16','0','0','1','0','','Lsens2','20','',0,0); -- lighting sensor analogue to bin
 INSERT INTO "dichannels" VALUES('','','0','LSW','3','16','0','0','1','0','','Lsens selector','0','',0,0); -- lighting sensor selector, 1=analogue
+
+INSERT INTO "dichannels" VALUES('1','202','0','PWS','1','18','0','0','0','0','','AC power','20','',0,0); -- toide di3
 
 -- jargmised teenused on meelespidamiseks, kas selle faasiga on asi korras
 INSERT INTO "dichannels" VALUES('','','','F1W','1','18','0','0','1','0','','feeder1 phase 1','20','',0,0); -- on failure. both value and status calculated based on energy!
@@ -50,17 +52,25 @@ INSERT INTO "dichannels" VALUES('','','','F3W','1','18','0','0','1','0','','feed
 INSERT INTO "dichannels" VALUES('','','','F3W','2','18','0','0','1','0','','feeder3 phase 2','20','',0,0); -- on failure. both value and status calculated based on energy!
 INSERT INTO "dichannels" VALUES('','','','F3W','3','18','0','0','1','0','','feeder3 phase 3','20','',0,0); -- on failure. both value and status calculated based on energy!
 
+INSERT INTO "dichannels" VALUES('','','','F4W','1','18','0','0','1','0','','feeder4 phase 1','20','',0,0); -- on failure. both value and status calculated based on energy!
+INSERT INTO "dichannels" VALUES('','','','F4W','2','18','0','0','1','0','','feeder4 phase 2','20','',0,0); -- on failure. both value and status calculated based on energy!
+INSERT INTO "dichannels" VALUES('','','','F4W','3','18','0','0','1','0','','feeder4 phase 3','20','',0,0); -- on failure. both value and status calculated based on energy!
 
+INSERT INTO "dichannels" VALUES('','','','F5W','1','18','0','0','1','0','','feeder5 phase 1','20','',0,0); -- on failure. both value and status calculated based on energy!
+INSERT INTO "dichannels" VALUES('','','','F5W','2','18','0','0','1','0','','feeder5 phase 2','20','',0,0); -- on failure. both value and status calculated based on energy!
+INSERT INTO "dichannels" VALUES('','','','F5W','3','18','0','0','1','0','','feeder5 phase 3','20','',0,0); -- on failure. both value and status calculated based on energy!
 
--- INSERT INTO "dichannels" VALUES('','','','F11S','1','16','0','0','1','0','','feeder1 phase 1','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F12S','1','16','0','0','1','0','','feeder1 phase 2','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F13S','1','16','0','0','1','0','','feeder1 phase 3','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F21S','1','16','0','0','1','0','','feeder2 phase 1','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F22S','1','16','0','0','1','0','','feeder2 phase 2','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F23S','1','16','0','0','1','0','','feeder2 phase 3','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F31S','1','16','0','0','1','0','','feeder3 phase 1','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F32S','1','16','0','0','1','0','','feeder3 phase 2','20','',0,0); -- off on failure. both value and status calculated based on energy!
--- INSERT INTO "dichannels" VALUES('','','','F33S','1','16','0','0','1','0','','feeder3 phase 3','20','',0,0); -- off on failure. both value and status calculated based on energy!
+-- INSERT INTO "dichannels" VALUES('','','','F11S','1','18','0','0','1','0','','feeder1 phase 1','20','',0,0); -- off on failure. both value and status calculated based on energy!
+-- INSERT INTO "dichannels" VALUES('','','','F12S','1','18','0','0','1','0','','feeder1 phase 2','20','',0,0); -- off on failure. both value and status calculated based on energy!
+-- INSERT INTO "dichannels" VALUES('','','','F13S','1','18','0','0','1','0','','feeder1 phase 3','20','',0,0); -- off on failure. both value and status calculated based on energy!
+
+-- INSERT INTO "dichannels" VALUES('','','','F21S','1','18','0','0','1','0','','feeder2 phase 1','20','',0,0); -- off on failure. both value and status calculated based on energy!
+-- INSERT INTO "dichannels" VALUES('','','','F22S','1','18','0','0','1','0','','feeder2 phase 2','20','',0,0); -- off on failure. both value and status calculated based on energy!
+-- INSERT INTO "dichannels" VALUES('','','','F23S','1','18','0','0','1','0','','feeder2 phase 3','20','',0,0); -- off on failure. both value and status calculated based on energy!
+
+-- INSERT INTO "dichannels" VALUES('','','','F31S','1','18','0','0','1','0','','feeder3 phase 1','20','',0,0); -- off on failure. both value and status calculated based on energy!
+-- INSERT INTO "dichannels" VALUES('','','','F32S','1','18','0','0','1','0','','feeder3 phase 2','20','',0,0); -- off on failure. both value and status calculated based on energy!
+-- INSERT INTO "dichannels" VALUES('','','','F33S','1','18','0','0','1','0','','feeder3 phase 3','20','',0,0); -- off on failure. both value and status calculated based on energy!
 
 CREATE UNIQUE INDEX di_regmember on 'dichannels'(val_reg,member); -- mbi, mba jne voivad korduda! teenuste liikmed!
 -- NB bits and registers are not necessarily unique!

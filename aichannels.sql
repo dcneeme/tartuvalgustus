@@ -37,9 +37,9 @@ INSERT INTO "aichannels" VALUES('1','500','BTW','1','17','0','100','0','1000','0
 INSERT INTO "aichannels" VALUES('','','BTW','2','0','0','100','0','100','0','','1','','0','0','0','','batt temp limit','',3,0); -- just a line on the graph
 INSERT INTO "aichannels" VALUES('','','BTW','3','0','0','100','0','100','0','','1','','0','600','0','','batt temp limit','',3,0); -- just a line on the graph
 
-INSERT INTO "aichannels" VALUES('1','502','T1W','1','0','0','1000','0','1000','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur npe
-INSERT INTO "aichannels" VALUES('','','T1W','2','0','0','1000','0','1000','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur
-INSERT INTO "aichannels" VALUES('','','T1W','3','0','0','1000','0','1000','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur
+INSERT INTO "aichannels" VALUES('1','502','T1W','1','0','143','358','200','1250','20','','3','','','110','0','','','',3,0); -- ai 2, temperatuur npe tc1047a
+INSERT INTO "aichannels" VALUES('','','T1W','2','0','0','1000','0','1000','20','','3','','','-150','0','','','',3,0); -- ai 2, temperatuur
+INSERT INTO "aichannels" VALUES('','','T1W','3','0','0','1000','0','1000','20','','3','','','550','0','','','',3,0); -- ai 2, temperatuur
 
 
 -- INSERT INTO "aichannels" VALUES('1','503','A3V','1','0','0','100','0','100','0','','1','','0','20','0','','','',3,0); -- ai4

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-APVER='tartuvalgustus 04mai2014' # for npe only, test on other platforms before using!
+APVER='tartuvalgustus 07mai2014' # for npe only, test on other platforms before using!
 
 import os
 try:
@@ -15,14 +15,14 @@ p=Commands() # setup and commands from server
 r=RegularComm() # variables like uptime and traffic, not io channels
 
 #mac_ip=p.subexec('/mnt/nand-user/d4c/getnetwork.sh',1).strip('\n') # mac and ip from the system. 
-mac_ip=p.subexec('./getnetwork.sh',1) # mac and ip from the system. 
+mac_ip=p.subexec('./getnetwork.sh',1).strip('\n') # mac and ip from the system. 
 # getnetwork.sh is based on ip addr, should be system-independent! may cause kernel problems on olinuxino!
 print('mac ip',mac_ip)
 mac=mac_ip.split(' ')[0]
 ip=mac_ip.split(' ')[1]
 r.set_host_ip(mac_ip[1])
 if os.environ['HOSTNAME'] == 'server': # test linux  
-    mac='000101100001' # replace! CHANGE THIS!
+    mac='000101100002' # replace! CHANGE THIS!
     print('replaced mac to',mac_ip)
 udp.setID(mac) # env muutuja kaudu ehk parem?
 tcp.setID(mac) # 
@@ -41,16 +41,15 @@ c=Cchannels() # counters, power
 
 s.set_apver(APVER) # set version
 
-print('a',a) # debug
-print('d',d)
-print('c',c)
-print('s',s)
-print('r',r)
-print('p',p)
-print('udp',udp)
-print('tcp',tcp) # debug
+print('achannels a',a) # debug
+print('dchannels d',d)
+print('counters c',c)
+print('sqlgeneral s',s)
+print('regular r',r)
+print('commands p',p)
+print('udp conn udp',udp)
+print('tcp conn tcp',tcp) # debug
 
-# c.set_counter(1000,mba=1,regadd=400) # voi siis sta_reg ja member alusel
 #stp=Setup()
 #gc=GoogleCalendar()
 
@@ -59,7 +58,7 @@ print('tcp',tcp) # debug
 # LASE MUUTA loendite ja voimsuse alarmipiire
 # arvesta DI seisu valjundi lylitusel
 
-# app functions
+# functions
 
 def comm_doall():
     ''' Handle the communication with io channels via modbus and the monitoring server  '''
@@ -67,7 +66,7 @@ def comm_doall():
     d.doall()  #  di koik mis vaja, loeb tihti, raporteerib muutuste korral ja aeg-ajalt asynkroonselt
     c.doall() # loeb ja vahel ka raporteerib
     a.doall() # ai koik mis vaja, loeb ja vahel raporteerib
-    r.regular_svc() # UTW,ULW are default
+    r.regular_svc(svclist = ['ULW','UTW','ip']) # UTW,ULW are default
     got = udp.comm() # loeb ja saadab udp, siin 0.1 s viide sees. tagastab {} saadud key:value vaartustega
     if got != None:
         print(got) # debug
@@ -82,13 +81,14 @@ def comm_doall():
             p.subexec(['reboot'],0)
         # end making sure 
         
-        print('main: todo',todo) # debug
+        #print('main: todo',todo) # debug
         p.todo_proc(todo) # execute other possible commands
     #print '.', # debug
         
         
 def app_doall():
     ''' Application rules and logic, via services if possible  '''
+    global ts, LRW_ts
     try:
         LAWchange=0
         LSW=s.get_value('LSW','dichannels') # bin ana selector / lighting sensors
@@ -125,6 +125,7 @@ def app_doall():
             s.setby_dimember_do('LRW',1,(LRW[1]|LRW[2]|LRW[3])) # svc, member, value. writing dochannel that corresponds to the given member of LRW        
             msg='changed lighting state to '+str(LRW[1]|LRW[2]|LRW[3])
             LRW=s.get_value('LRW','dichannels') # LRW REREAD
+            LRW_ts=ts
         #print('app_doall 3: LAW LSW LRW',LAW,LSW,LRW) # debug
     
     except:
@@ -135,11 +136,29 @@ def app_doall():
         time.sleep(5)
         
 
+def crosscheck(): # FIXME: should be autoadjustable to the number of counter state channels RxyV
+    ''' Report failure states (via dichannels) depending on other states (from counters for example) '''
+    global ts, LRW_ts
+    LRW=s.get_value('LRW','dichannels') # LRW REREAD
+    
+    services=s.get_column('counters','val_reg','R__V') # table,column,like = ''
+    for svc in services:
+        feeder=svc[1]
+        phase=svc[2]
+        try:
+            phasestate=s.get_value('R'+feeder+phase+'V','counters')[0]  # must not be empty!! should be ok in the end when values appear
+            if ts > LRW_ts + 20: # time to check if state based on power is the same as LRW[0]. off_tout = 10
+                s.set_membervalue('F'+feeder+'W', eval(phase),(LRW[0]^phasestate),'dichannels') # for 3in1 service, members are phases
+                #s.set_membervalue('F'+feeder+phase'S', 1,(LRW[0]^phasestate),'dichannels') # for 1by1 service, always member 1
  
- 
- 
+        except:
+            print('feeder,phase',feeder+1,phase+1) # debug
+            traceback.print_exc()
+            time.sleep(5)
+    
  ################  MAIN #################
-
+ts=time.time() # needed for manual function testing
+LRW_ts=ts
 
 if __name__ == '__main__':
     #kontrollime energiamootjate seisusid. koik loendid automaatselt?
@@ -151,11 +170,11 @@ if __name__ == '__main__':
     udp.udpsend(sendstring)
 
 
-while stop == 0:
-    
+    while stop == 0: # endless loop 
+        ts=time.time() # global for functions
         comm_doall()  # communication with io and server
         app_doall() # application rules and logic, via services if possible 
-    
+        crosscheck() # check for phase consumption failures 
         # #########################################
         
         if len(msg)>0:

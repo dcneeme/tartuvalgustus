@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <imod version="1.0.0" acquisition_period="600">
 
-    <!-- rs485 off here for testing ! -->
+    <!-- rs485 off here, use modbusd instead! -->
     
     <group name="Channel definitions">
         <source-channel name="NPE_io">
@@ -35,7 +35,7 @@
             <property name="device-id" value="1" />
         </access-channel>
     
-        <!-- throw out the unusable counters  
+        <!-- throw out the unusable imod counters  
         <message-channel name="ForceWrite_400">
              <protocol name="forcewrite"/>
              <recipient>"400"</recipient>
@@ -146,11 +146,13 @@
             <description>"DI1"</description>
             <source-channel channel-name="NPE_io" parameter-id="DI1"/>
             <access-channel channel-name="Modbus_S1" parameter-id="200"/>
+            <!-- 
             <event type="LoAlarm">
                 <message-channel channel-name="ForceWrite_400"/>
                 <message-id>"Count_400"</message-id>
                 <property name="trigger" value="1"/>
             </event>
+            -->
         </parameter>
 
         <parameter>
@@ -158,11 +160,13 @@
             <description>"DI2"</description>
             <source-channel channel-name="NPE_io" parameter-id="DI2"/>
             <access-channel channel-name="Modbus_S1" parameter-id="201"/>
+            <!--
             <event type="LoAlarm">
                 <message-channel channel-name="ForceWrite_402"/>
                 <message-id>"Count_402"</message-id>
                 <property name="trigger" value="1"/>
             </event>
+            -->
         </parameter>
 
         <parameter>
@@ -170,11 +174,13 @@
             <description>"DI3"</description>
             <source-channel channel-name="NPE_io" parameter-id="DI3"/>
             <access-channel channel-name="Modbus_S1" parameter-id="202"/>
+            <!--
             <event type="LoAlarm">
                 <message-channel channel-name="ForceWrite_404"/>
                 <message-id>"Count_404"</message-id>
                 <property name="trigger" value="1"/>
             </event>
+            -->
         </parameter>
 
         <parameter>
@@ -182,11 +188,13 @@
             <description>"DI4"</description>
             <source-channel channel-name="NPE_io" parameter-id="DI4"/>
             <access-channel channel-name="Modbus_S1" parameter-id="203"/>
+            <!--
             <event type="LoAlarm">
                 <message-channel channel-name="ForceWrite_406"/>
                 <message-id>"Count_406"</message-id>
                 <property name="trigger" value="1"/>
             </event>
+            -->
         </parameter>
 
         <parameter>
@@ -194,11 +202,13 @@
             <description>"DI5"</description>
             <source-channel channel-name="NPE_io" parameter-id="DI5"/>
             <access-channel channel-name="Modbus_S1" parameter-id="204"/>
+            <!-- 
             <event type="LoAlarm">
                 <message-channel channel-name="ForceWrite_408"/>
                 <message-id>"Count_408"</message-id>
                 <property name="trigger" value="1"/>
             </event>
+            -->
         </parameter>
 
         <parameter>
@@ -206,11 +216,13 @@
             <description>"DI6"</description>
             <source-channel channel-name="NPE_io" parameter-id="DI6"/>
             <access-channel channel-name="Modbus_S1" parameter-id="205"/>
+            <!--
             <event type="LoAlarm">
                 <message-channel channel-name="ForceWrite_410"/>
                 <message-id>"Count_410"</message-id>
                 <property name="trigger" value="1"/>
             </event>
+            -->
         </parameter>
 
     <!-- the following di is NOT used for counter, no event -->
@@ -224,7 +236,7 @@
     </group>
     
     <group name="local ai, 1w">
-<!-- AI channels - kanalite jarjestus olgu pidev, siis saab korraga kysida  -->
+        <!-- AI channels  -->
 
         <parameter>
             <id>"500"</id>
@@ -255,20 +267,20 @@
         </parameter>
         
     <!-- 1wire sensors , read 2 registers here! -->
-    
+    <!-- very difficult. id must be set and output is float...
         <parameter type="real32">
             <id>"504"</id>
             <description>"THERMOMETER_DS18B20"</description>
             <source-channel channel-name="OneWire" parameter-id="289437A9020000:temperature"/>
             <access-channel channel-name="Modbus_S1" parameter-id="504"/>
         </parameter>
-     
+     -->
     </group>
 
 
     
     
-    <!-- counters of npe are unusable 
+    <!-- counters of npe are totally unusable 
     
     <group name="counters local npe_io">  
       
