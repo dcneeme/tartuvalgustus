@@ -30,6 +30,7 @@ CREATE TABLE counters(mba,regadd,val_reg,member,cfg,x1,x2,y1,y2,outlo,outhi,avg,
 -- INSERT INTO "counters" VALUES('1','408','E2CW','2','0','0','1000','0','1000','','','2','100','','','','','en tarve Wh','c1.406-411',-2,0); -- fiider 2 faas 2
 -- INSERT INTO "counters" VALUES('1','410','E2CW','3','0','0','1000','0','1000','','','2','100','','','','','en tarve Wh','c1.406-411',-2,0); -- fiider 2 faas 3
 
+-- allpool normaalne ioplaat
 INSERT INTO "counters" VALUES('1','400','E1CW','1','0','0','1000','0','1000','','','2','100','','','','','en tarve Wh','c1.400-405',2,1); -- fiider 1 faas 1
 INSERT INTO "counters" VALUES('1','402','E1CW','2','0','0','1000','0','1000','','','2','100','','','','','en tarve Wh','c1.400-405',2,1); -- fiider 1 faas 1
 INSERT INTO "counters" VALUES('1','404','E1CW','3','0','0','1000','0','1000','','','2','100','','','','','en tarve Wh','c1.400-405',2,1); -- fiider 1 faas 1
@@ -58,6 +59,7 @@ INSERT INTO "counters" VALUES('1','410','E2CW','3','0','0','1000','0','1000','',
 -- block kasutame off thresholdi etteandmiseks sekundites (kui nii kaua uusi imp ei tule siis on off)
 -- voimused faaside kaupa et igale oma threshold anda
 -- INSERT INTO "counters" VALUES('14','1','P11W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 1 faas 1 W, keeluaken 2
+-- ioplaat
 INSERT INTO "counters" VALUES('1','400','P11W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 1 faas 1 W, keeluaken 2
 INSERT INTO "counters" VALUES('','','P11W','2','','0','1','0','3600','','','2','100','','1000','','','abijoon Wh','',2,0); -- fiider 1 faas 1 W, keskm 2
 INSERT INTO "counters" VALUES('','','P11W','3','','0','1','0','3600','','','2','100','','2000','','','abijoon Wh','',2,0); -- fiider 1 faas 1 W, keskm 2
@@ -84,13 +86,13 @@ INSERT INTO "counters" VALUES('','','P23W','2','','0','1','0','3600','','','2','
 INSERT INTO "counters" VALUES('','','P23W','3','','0','1','0','3600','','','2','100','','2200','','','abijoon Wh','',2,0); -- fiider 2 faas 1 W, keskm 2
 
 -- INSERT INTO "counters" VALUES('17','1','P31W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 1 W, keeluaken 2
-INSERT INTO "counters" VALUES('1','412','P31W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 1 W, keeluaken 2
-INSERT INTO "counters" VALUES('','','P31W','2','','0','1','0','3600','','','2','100','','1000','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
+-- INSERT INTO "counters" VALUES('1','412','P31W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 1 W, keeluaken 2
+-- INSERT INTO "counters" VALUES('','','P31W','2','','0','1','0','3600','','','2','100','','1000','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
 INSERT INTO "counters" VALUES('','','P31W','3','','0','1','0','3600','','','2','100','','2000','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
 -- INSERT INTO "counters" VALUES('17','3','P32W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 2 W, keeluaken 2
-INSERT INTO "counters" VALUES('1','414','P32W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 2 W, keeluaken 2
-INSERT INTO "counters" VALUES('','','P32W','2','','0','1','0','3600','','','2','100','','1000','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
-INSERT INTO "counters" VALUES('','','P32W','3','','0','1','0','3600','','','2','100','','2000','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
+-- INSERT INTO "counters" VALUES('1','414','P32W','1','357','0','1','0','3600','1000','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 2 W, keeluaken 2
+-- INSERT INTO "counters" VALUES('','','P32W','2','','0','1','0','3600','','','2','100','','1000','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
+-- INSERT INTO "counters" VALUES('','','P32W','3','','0','1','0','3600','','','2','100','','2000','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
 -- INSERT INTO "counters" VALUES('17','5','P33W','1','357','0','1','0','3600','200','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 3 W, keeluaken 2
 -- INSERT INTO "counters" VALUES('1','416','P33W','1','357','0','1','0','3600','200','2200','2','30','','','','','en tarve Wh','',2,1); -- fiider 3 faas 3 W, keeluaken 2
 -- INSERT INTO "counters" VALUES('','','P33W','2','','0','1','0','3600','','','2','100','','200','','','abijoon Wh','',2,0); -- fiider 3 faas 1 W, keskm 2
@@ -119,13 +121,14 @@ INSERT INTO "counters" VALUES('','','P32W','3','','0','1','0','3600','','','2','
 -- INSERT INTO "counters" VALUES('1','408','R2W','2','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','c1.400-405',-2,0); -- ON OFF , IMMEDIATE NOTIF
 -- INSERT INTO "counters" VALUES('1','410','R2W','3','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','c1.400-405',-2,0); -- ON OFF , IMMEDIATE NOTIF
 
-INSERT INTO "counters" VALUES('1','400','R1W','1','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
-INSERT INTO "counters" VALUES('1','402','R1W','2','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
-INSERT INTO "counters" VALUES('1','404','R1W','3','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
+-- ioplaat
+INSERT INTO "counters" VALUES('1','400','R1W','1','148','0','1','0','1','0','0','','30','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
+INSERT INTO "counters" VALUES('1','402','R1W','2','148','0','1','0','1','0','0','','30','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
+INSERT INTO "counters" VALUES('1','404','R1W','3','148','0','1','0','1','0','0','','30','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
 
-INSERT INTO "counters" VALUES('1','406','R2W','1','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
-INSERT INTO "counters" VALUES('1','408','R2W','2','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
-INSERT INTO "counters" VALUES('1','410','R2W','3','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
+INSERT INTO "counters" VALUES('1','406','R2W','1','148','0','1','0','1','0','0','','30','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
+INSERT INTO "counters" VALUES('1','408','R2W','2','148','0','1','0','1','0','0','','30','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
+INSERT INTO "counters" VALUES('1','410','R2W','3','148','0','1','0','1','0','0','','30','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF
 
 
 -- INSERT INTO "counters" VALUES('14','1','R1W','1','148','0','1','0','1','0','0','','10','','','','','en tarve on/off','',2,1); -- ON OFF , IMMEDIATE NOTIF

@@ -4,7 +4,8 @@ BEGIN TRANSACTION;
 
 CREATE TABLE 'devices'(num integer,rtuaddr integer,tcpaddr,mbi integer,name,location,descr,count0 integer,count1 integer,count2 integer,count3 integer); -- ebables using mixed rtu and tcp inputs
 
-INSERT INTO 'devices' VALUES(1,1,'127.0.0.1:502',0,'techbase','','linux kontroller',7,4,4,8); -- on npe
+-- INSERT INTO 'devices' VALUES(1,1,'127.0.0.1:502',0,'techbase','','linux kontroller',7,4,4,8); -- imod on npe
+INSERT INTO 'devices' VALUES(1,1,'npe_io',0,'techbase','','linux kontroller',7,4,4,8); -- npe_read/write.sh on npe
 -- INSERT INTO 'devices' VALUES(2,14,'127.0.0.1:1502',1,'counter','','loendimoodul 1',0,0,0,0); -- 
 -- INSERT INTO 'devices' VALUES(3,15,'127.0.0.1:1502',1,'counter','','loendimoodul 2',0,0,0,0);
 -- INSERT INTO 'devices' VALUES(4,17,'127.0.0.1:1502',1,'counter','','loendimoodul 3',0,0,0,0);

@@ -3,27 +3,31 @@
 APVER='tartuvalgustus 07mai2014' # for npe only, test on other platforms before using!
 
 import os
+# env variable HOSTNAME should be set before starting python
 try:
     print('HOSTNAME is',os.environ['HOSTNAME'])
 except:
-    os.environ['HOSTNAME']='techbase' # to make sure it exists on background of npe too
+    os.environ['HOSTNAME']='olinuxino' # techbase # to make sure it exists on background of npe too
     print('set HOSTNAME to techbase')
     
-#from uniscada import * # achannel ja dchannel impordivad sqlgenerali ja see jalle uniscada. 
 from droidcontroller.udp_commands import * # sellega alusta, kakaivitab ka SQlgeneral
 p=Commands() # setup and commands from server
 r=RegularComm() # variables like uptime and traffic, not io channels
 
-#mac_ip=p.subexec('/mnt/nand-user/d4c/getnetwork.sh',1).strip('\n') # mac and ip from the system. 
-mac_ip=p.subexec('./getnetwork.sh',1).strip('\n') # mac and ip from the system. 
-# getnetwork.sh is based on ip addr, should be system-independent! may cause kernel problems on olinuxino!
-print('mac ip',mac_ip)
-mac=mac_ip.split(' ')[0]
-ip=mac_ip.split(' ')[1]
-r.set_host_ip(mac_ip[1])
 if os.environ['HOSTNAME'] == 'server': # test linux  
+    mac_ip=p.subexec('./getnetwork.sh',1).decode("utf-8").split(' ')
     mac='000101100002' # replace! CHANGE THIS!
     print('replaced mac to',mac_ip)
+elif os.environ['HOSTNAME'] == 'olinuxino':
+    mac_ip=p.subexec('/root/d4c/getnetwork.sh',1).decode("utf-8").split(' ')
+elif os.environ['HOSTNAME'] == 'techbase':
+    mac_ip=p.subexec('/mnt/nand-user/d4c/getnetwork.sh',1).decode("utf-8").split(' ')
+
+print('mac ip',mac_ip)
+mac=mac_ip[0]
+ip=mac_ip[1]
+r.set_host_ip(ip)
+
 udp.setID(mac) # env muutuja kaudu ehk parem?
 tcp.setID(mac) # 
 udp.setIP('46.183.73.35')
@@ -38,17 +42,20 @@ a=Achannels() # both ai and ao
 d=Dchannels() # di and do 
 c=Cchannels() # counters, power
 
+s.check_setup('aichannels')
+s.check_setup('dichannels')
+s.check_setup('counters')
 
 s.set_apver(APVER) # set version
 
-print('achannels a',a) # debug
-print('dchannels d',d)
-print('counters c',c)
-print('sqlgeneral s',s)
-print('regular r',r)
-print('commands p',p)
-print('udp conn udp',udp)
-print('tcp conn tcp',tcp) # debug
+#print('achannels a',a) # debug
+#print('dchannels d',d)
+#print('counters c',c)
+#print('sqlgeneral s',s)
+#print('regular r',r)
+#print('commands p',p)
+#print('udp conn udp',udp)
+#print('tcp conn tcp',tcp) # debug
 
 #stp=Setup()
 #gc=GoogleCalendar()
@@ -83,7 +90,7 @@ def comm_doall():
         
         #print('main: todo',todo) # debug
         p.todo_proc(todo) # execute other possible commands
-    #print '.', # debug
+    
         
         
 def app_doall():
@@ -121,7 +128,7 @@ def app_doall():
         # actual control based on input variables (sensor, calendar, remote)
         
         #print('LRW',LRW) # debug
-        if round(LRW[0]) <> round((LRW[1]|LRW[2]|LRW[3])): # relay toggle needed if any of the input parameters is not 0
+        if round(LRW[0]) != round((LRW[1]|LRW[2]|LRW[3])): # relay toggle needed if any of the input parameters is not 0
             s.setby_dimember_do('LRW',1,(LRW[1]|LRW[2]|LRW[3])) # svc, member, value. writing dochannel that corresponds to the given member of LRW        
             msg='changed lighting state to '+str(LRW[1]|LRW[2]|LRW[3])
             LRW=s.get_value('LRW','dichannels') # LRW REREAD
@@ -173,14 +180,15 @@ if __name__ == '__main__':
     while stop == 0: # endless loop 
         ts=time.time() # global for functions
         comm_doall()  # communication with io and server
-        app_doall() # application rules and logic, via services if possible 
-        crosscheck() # check for phase consumption failures 
+        #app_doall() # application rules and logic, via services if possible 
+        #crosscheck() # check for phase consumption failures 
         # #########################################
         
         if len(msg)>0:
             print(msg)
             udp.syslog(msg)
             msg=''
-        #time.sleep(1)  # main loop takt 0.1, debug jaoks suurem
-        
+        #time.sleep(1)  # main loop takt 0.1, debug jaoks suurem / jookseb kinni kui viidet pole? subprocess?
+        sys.stdout.write('.') # dot without newline for main loop
+        sys.stdout.flush()        
     # main loop end, exit from application

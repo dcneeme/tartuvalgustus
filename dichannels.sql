@@ -24,6 +24,7 @@ CREATE TABLE dichannels(mba,regadd,bit,val_reg,member,cfg,block,value,status,ts_
 -- type is for category flagging, 0=do, 1 = di, 2=ai, 3=ti. use only 0 and 1 in this table
 
 -- controlled outputs, following dochannels bit values. outputs will not change if they are not followed here!
+INSERT INTO "dichannels" VALUES('1','1','0','LES','1','0','0','0','0','0','','USER_LED','20','',0,0); -- kollane LED side ok
 
 INSERT INTO "dichannels" VALUES('1','100','0','LRW','1','17','0','0','0','0','','contactor','20','',0,0); -- valgustuse relee olek
 INSERT INTO "dichannels" VALUES('','','0','LRW','2','17','0','0','0','0','','lokaalne andur','20','',0,0); -- juhtsignaalid OR
