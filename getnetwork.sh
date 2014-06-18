@@ -16,4 +16,10 @@ if [ "$1" = "" ]; then
 else
     iface=$1
 fi
-ip addr | cut -c5- | grep -A1 $iface | tr -d "\n" | tr -d ":" | tr '[a-f]' '[A-F]' | cut -d" " -f2,5
+#ip addr | cut -c5- | grep -A1 $iface | tr -d "\n" | tr -d ":" | tr '[a-f]' '[A-F]' | cut -d" " -f2,5
+
+# kui ei allu syscfg poolt maaratule
+mac=`cat /mnt/mtd/syscfg | grep HOST_MAC | cut -d"=" -f2 | cut -d" " -f1 | sed 's/://g'`
+ip=`ip addr | cut -c5- | grep -A2 eth0 | grep inet | cut -d" " -f2` #
+
+echo $mac $ip

@@ -9,13 +9,13 @@
 -- # 8   above outhi critical
 
 -- 16 - immediate notification on status change (USED FOR STATE FROM POWER)
--- 32 - value limits to status inversion  - voimaldab anda YHTE kollast/punast ala, naiteks tanavavalgustuse jaoks  
--- 64 - power flag
+-- 32 - value "limits to status" inversion  - to defined forbidden area instead of allowed area  
+-- 64 - power flag, based on value increments
 -- 128 - state from power flag
--- 256 - notify on 10% value change (not only limit crossing that becomes activated by 5 or 10)
+-- 256 - notify on 10% value change (not only limit crossing that becomes activated by first 4 cfg bits)
 -- 512 - do not report at all, for internal usage
--- counters are normally located in 2 registers 
--- comment used for read group defining, speeds up reading
+-- counters are normally located in 2 registers, but also ai values can be 32 bits. 
+-- negative wcount means swapped words (barionet, npe imod)
  
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
