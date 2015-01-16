@@ -13,9 +13,9 @@ CREATE TABLE dochannels(mba,regadd,bit,bootvalue,value,rule,desc,comment,mbi int
 -- it is possible to combine values from different modbus slaves and registers into one service. 
 -- possible status values are 0..3
 
-INSERT INTO "dochannels" VALUES('1','100','0','0','0','','output DO1','sisselylitus',0); -- kontaktor
-INSERT INTO "dochannels" VALUES('1','1','0','0','0','','USER_LED','side ok',0); -- USER_LED, side ok
--- INSERT INTO "dochannels" VALUES('1','0','0','0','0','','output DO1','relee sisse',0); 
+-- INSERT INTO "dochannels" VALUES('1','100','0','0','0','','output DO1','sisselylitus',0); -- kontaktor npe
+INSERT INTO "dochannels" VALUES('1','0','8','0','0','','output DO1','sisselylitus',0); -- kontaktor olinuxinoi
+
 
 CREATE UNIQUE INDEX do_mbaregbit on 'dochannels'(mbi,mba,regadd,bit); -- 
 

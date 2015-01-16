@@ -113,9 +113,10 @@ if [ `echo "$lastlog" | tail -1 | grep "CONN_LOSS" | wc -l` -eq 0 ]; then # loss
     (echo -n "CONN_LOSS "; date +%s) >> $LOG 
 else 
     losstime=`echo "$lastlog" | tail -1 | cut -d" " -f2`
+    uptime=`cat /proc/uptime | cut -d"." -f1` # second no is total idle time
     now=`date +%s`
-    if [ `expr $now - $losstime` -gt 1800 ]; then
-        echo going to reboot due to conn loss at least 30 min ago
+    if [ `expr $now - $losstime` -gt 1800 -a $uptime -gt 1800 ]; then # both uptime and conn loss above 30 min
+        echo going to reboot due to conn loss and reboot at least 30 min ago
         reboot
     fi
 fi

@@ -25,9 +25,9 @@ CREATE TABLE dichannels(mba,regadd,bit,val_reg,member,cfg,block,value,status,ts_
 -- type is for category flagging, 0=do, 1 = di, 2=ai, 3=ti. use only 0 and 1 in this table
 
 -- controlled outputs, following dochannels bit values. outputs will not change if they are not followed here!
-INSERT INTO "dichannels" VALUES('1','1','0','LES','1','0','0','0','0','0','','USER_LED','h','',0,0); -- kollane LED side ok
+-- INSERT INTO "dichannels" VALUES('1','1','0','LES','1','0','0','0','0','0','','USER_LED','h','',0,0); -- kollane LED side ok
 
-INSERT INTO "dichannels" VALUES('1','100','0','LRW','1','17','0','0','0','0','','contactor','h','',0,0); -- valgustuse relee olek npe juhtimisel
+INSERT INTO "dichannels" VALUES('1','0','8','LRW','1','17','0','0','0','0','','contactor do1','h','',0,0); -- valgustuse relee olek npe juhtimisel
 INSERT INTO "dichannels" VALUES('','','0','LRW','2','17','0','0','0','0','','lokaalne andur','h','',0,0); -- juhtsignaalid OR
 INSERT INTO "dichannels" VALUES('','','0','LRW','3','17','0','0','0','0','','kalender','s','',0,0); -- 
 INSERT INTO "dichannels" VALUES('','','0','LRW','4','17','0','0','0','0','','kaugjuhtimine','s!','',0,0); -- 
@@ -37,13 +37,14 @@ INSERT INTO "dichannels" VALUES('','','0','VPW','1','17','0','0','0','0','','VPN
 INSERT INTO "dichannels" VALUES('','','0','VPW','2','17','0','0','0','0','','lokaalne vpn vajadus','s','',0,0); -- lokaalne loogika luba
 INSERT INTO "dichannels" VALUES('','','0','VPW','3','17','0','0','0','0','','kaugjuhtimine','s!','',0,0); -- man kaugelt luba
 
-INSERT INTO "dichannels" VALUES('1','200','0','BRS','1','18','0','0','0','0','','door','h','',0,0); -- uks di1
+INSERT INTO "dichannels" VALUES('1','1','8','BRS','1','18','0','0','0','0','','door','h','',0,0); -- uks di1
 
-INSERT INTO "dichannels" VALUES('1','201','0','LSW','1','16','0','0','0','0','','L sens1','h','',0,0); -- lighting sensor bin di2
+INSERT INTO "dichannels" VALUES('1','1','9','LSW','1','16','0','0','0','0','','L sens1','h','',0,0); -- lighting sensor bin di2
 INSERT INTO "dichannels" VALUES('','','0','LSW','2','16','0','0','1','0','','Lsens2','h','',0,0); -- lighting sensor analogue to bin
 INSERT INTO "dichannels" VALUES('','','0','LSW','3','16','0','0','1','0','','Lsens selector','s!','',0,0); -- lighting sensor selector, 1=analogue
 
-INSERT INTO "dichannels" VALUES('1','202','0','PWS','1','18','0','0','0','0','','AC power','h','',0,0); -- toide di3
+-- INSERT INTO "dichannels" VALUES('1','202','0','PWS','1','18','0','0','0','0','','AC power','h','',0,0); -- toide di3
+INSERT INTO "dichannels" VALUES('1','1','10','PWS','1','18','0','0','0','0','','AC power','h','',0,0); -- toide di3
 
 -- jargmised teenused on meelespidamiseks, kas selle faasiga on asi korras
 INSERT INTO "dichannels" VALUES('','','','F1W','1','18','0','0','1','0','','feeder1 phase 1','s','',0,0); -- on failure. both value and status calculated based on energy!

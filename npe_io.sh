@@ -6,6 +6,12 @@
 # register must be unique over types! types: r read, w write, p process form, b send data back
 #registers in use: 1, 2, 3, 10,     100-104, 200-206, (400-411), 500-503
 #           led, pyalive, udpalive, do,      di,      (count),   ai 
+
+#use from cli on npe: ./npe_io.sh 100 1 r
+# or via socat using netcat: echo "100 2 r" | netcat -w1 -u 10.0.0.121 44441
+# 2541 root     /bin/sh /mnt/nand-user/d4c/socatd
+# 2544 root     ./socat -t5 UDP4-RECVFROM:44441,reuseaddr,fork SYSTEM:/mnt/nand-user/d4c/npe_io.sh
+
 stdin=0
 LOG=/tmp/appd.log
 
@@ -32,13 +38,16 @@ fi
 
 if [ "$type" = "p" ]; then # fork a predefined (for security) process based on $register and $count
   if [ $register -eq 2 ]; then
-    /mnt/nand-user/d4c/python_alive.sh $count &
+    /mnt/nand-user/d4c/python_alive.sh $count & # python_alive
     exit 0
-  elif [ $register -eq 3 ]; then
+  elif [ $register -eq 3 ]; then # udp_alive
     /mnt/nand-user/d4c/udp_alive.sh $count &
     exit 0
-    else
-  echo "illegal_register_${register}_and_type_${type}_combination"
+  elif [ $register -eq 4 ]; then # watchdog restart, to be done if everything is ok
+    watchdog -t $count /dev/watchdog & # npe will reboot if no rewrite in $count s. start watchdog in syscfg!
+    exit 0
+  else
+    echo "illegal_register_${register}_and_type_${type}_combination"
     exit 1
   fi
 fi
