@@ -18,15 +18,16 @@ INSERT INTO 'setup' VALUES('S512','test','','location','');
 INSERT INTO 'setup' VALUES('S514','','','syslog server ip address','local broadcast in use if empty or 0.0.0.0 or 255.255.255.255'); -- port is fixed to udp 514.
 
 -- ioplaadi setup
--- INSERT INTO 'setup' VALUES('W1.270','48','','ref ja pw luba',''); -- NEW PIC. 
+INSERT INTO 'setup' VALUES('W1.270','48','','ref ja pw luba',''); -- NEW PIC. 
 -- INSERT INTO 'setup' VALUES('W1.271','0','','DI XOR 0000','inversioon'); -- NEW PIC. DI inversion bitmap. 0=hi active, 1=low active
 -- INSERT INTO 'setup' VALUES('W1.272','0','','powerup mode','do on startup 0x0000'); -- starmani jaoks koik releed off startimisel / EI MOIKA??
 
--- INSERT INTO 'setup' VALUES('W1.275','6162','','ANA bitmap','2 tk di'); --  uus pic, 2 tk di  00011000 MBS
+INSERT INTO 'setup' VALUES('W1.275','57344','','ANA bitmap','2 tk di'); --  uus pic, 3 tk di  1110 0000 0000 0000 LSB
+-- kontrolli, kas ei kirjuta registreid??
 
--- INSERT INTO 'setup' VALUES('W1.276','180','','usbreset powerup protection','60 s'); -- usbreset powerup protection
--- INSERT INTO 'setup' VALUES('W1.276','50000','','usbreset powerup protection','60 s'); -- resetti ei tee. AGA 0 jatab pidevalt resettima!
--- INSERT INTO 'setup' VALUES('W1.277','5','','usbreset pulse','pikkus 5s'); -- usbreset droid , et jouks veidigi laadida pideva resettimisega
+-- INSERT INTO 'setup' VALUES('W1.276','512','','5v reset timeout','olinuxino toide'); -- 
+-- INSERT INTO 'setup' VALUES('W1.277','9','','5v reset pulse','olinuxino toide'); -- 
+
 -- INSERT INTO 'setup' VALUES('W1.278','50000','','button pulse len','180 s viide'); -- seda resetti pole linuxi korral vaja
 -- INSERT INTO 'setup' VALUES('W1.279','5','','button pulse','5 s'); -- buttonpulse 5 s pulse , useless for linux
 
