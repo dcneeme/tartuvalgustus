@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-APVER='main_LXW 4.2.2015' # for olinuxino
-# valgustuse signaali saatmine eliko serverisse
+APVER='main_LXW 26.9.2015' # for olinuxino
+# valgustuse 3 signaali saatmine eliko ja gridensi serveritesse
 
 
 #################### functions ######################################################
@@ -62,7 +62,7 @@ def comm_doall():
         #    led.commLED(1)
         if got != {}:
             ac.parse_udp(got) # chk if setup or counters need to be changed
-            d.parse_udp(got) # chk if setup ot toggle for di
+            #d.parse_udp(got) # no dchannels.py in use!
             todo=p.parse_udp(got) # any commands or setup variables from server?
 
             # a few command to make sure they are executed even in case of udp_commands failure
@@ -91,6 +91,8 @@ def app_doall():
     ''' Application part for energy metering and consumption limiting, via services if possible  '''
     # lisada andurite erinevuste vordlemine ja korras anduri valik liiga suure erinevuse korral
     global ts, ts_app, ts_lux, LXW # LXW 2 anduri keskmise alusel elikosse saatmine
+    LXeliko = [ 0, 0, 0] # lux levels to eliko
+    
     if ts > ts_app + 20: # read luxmeter every 20 s
         ts_app = ts
         
@@ -99,22 +101,25 @@ def app_doall():
             if LXW[i] < 0:
                 LXW[i] = 0 # lahtine sisend annab negatiivse lugemi
 
-        #if LXW[1] > 100: # 2 andurit olemas
-        #    LXeliko = round((LXW[0] +LXW[1])/200.0, 2)  # lx
-        #else:
-        LXeliko = round(LXW[0]/100.0, 2) # lx
-        
+        lux = ''
+        for i in range(len(LXeliko)):
+            LXeliko[i] = round(LXW[i]/100.0, 2) # lx
+            if len(lux)>1:
+                lux += '&'
+            lux += 'lux'+str(i+1)+'='+str(LXeliko[i])
 
-    if ts > ts_lux + 60: # send lux once per minute
-        ts_lux = ts
-        log.info('lighting level to eliko '+str(LXeliko)+' lx')
-        lux = 'lux='+str(LXeliko)
-        res = rs.dorequest(lux) # expected default response is 'ok' 
-        if res != 0:
-            log.warning('FAILED to send lux data!')
-    
-    
-
+        if ts > ts_lux + 60: # send lux once per minute
+            ts_lux = ts
+            log.info('sending lighting levels '+str(LXeliko)+' lx to eliko and gridens')
+            
+            res = rs.dorequest(lux) # expected default response is 'ok' 
+            gres = gs.send(LXeliko[0], LXeliko[1], LXeliko[2]) # 200 if ok
+            if res != 0:
+                log.warning('FAILED to send lux data to eliko!')
+            elif gres != True:
+                log.warning('FAILED to send lux data to gridens!')
+            else:
+                log.info('successful lux sending both to eliko and gridens')
     
  ################  MAIN #################
 
@@ -174,6 +179,11 @@ from droidcontroller.acchannels import * # ai and counters
 #from droidcontroller.heatflow import * # heat flow and energy
 #from droidcontroller.pid import * # pid and 3step control
 
+from gridens import *
+gs = LuxmeterDataSender(api_token='37034313afcbd377fd8716e951b130f2bb0bf1ac', organization_id=18) ## gridensile
+#organization_id = 18 # Tartu
+#api_token='37034313afcbd377fd8716e951b130f2bb0bf1ac'
+
 print('mac ip',mac_ip)
 mac = get_hostID('network.conf') # mac algusega reast
 ip = mac_ip[1]
@@ -217,6 +227,6 @@ if __name__ == '__main__':  ####################################################
         comm_doall()  # communication with io and server
         app_doall() # application rules and logic, via services if possible
         time.sleep(0.1)  # main loop takt 0.1
-        sys.stdout.write('.') # dot without newline for main loop
-        sys.stdout.flush()
+        #sys.stdout.write('.') # dot without newline for main loop
+        #sys.stdout.flush()
     # main loop end, exit from application

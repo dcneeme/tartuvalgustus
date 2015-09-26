@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-APVER='tartuvalgustus 27.1.2015' # for npe only, test on other platforms before using!
+APVER='tartuvalgustus 11.6.2015' # app_doall off!
 # 24.5.2014 added imod (re)start in case of mb[0 problems
 # 30.05.2014 acchannels kasutusele
 #15.06.2014 pull, push ok
@@ -19,28 +19,37 @@ APVER='tartuvalgustus 27.1.2015' # for npe only, test on other platforms before 
 
 # functions
 
-def get_hostID(filename):
+def get_hostID(filename): 
     ''' ID as mac is not reliable on olinuxino. use the mac from file to become id ! '''
     mac = None
     try:
-        with open(filename) as f:
-            lines = f.read().splitlines()
-            mac = None
-            for line in lines:
-                if 'mac ' in line[0:5]:
-                    mac=line[4:].replace(':','')
-                    if len(mac) == 12:
-                        log.info('found host id (variable mac) to become '+mac)
-                    else:
-                        log.error('found host id (variable mac) with WRONG length! '+mac)
+        mac=get_conf('mac',filename,delimiter=' ').replace(':','')
+        if len(mac) == 12:
+            log.info('found host id (variable mac) to become '+mac)
+        else:
+            log.warning('found host id (variable mac) with WRONG length! '+mac)
     except:
-        log.error('no readable file '+filename+' for host_id!')
+        log.error('ERROR getting host_id from file '+filename+'!')
     return mac
 
+
+def get_conf(key, filename, delimiter = ' '): # delimiter separated key and string in the file
+    ''' Return the tring after the key and space from the file '''
+    try:
+        with open(filename) as f:
+            lines = f.read().splitlines()
+            for line in lines:
+                if key+delimiter in line[0:len(key)+len(delimiter)]:
+                    return line.split(delimiter)[1] # [4:len(key)+1]
+    except:
+        log.error('no readable file '+filename+' for '+key)
+    return None
+  
+    
     
 def comm_doall():
     ''' Handle the communication with io channels via modbus and the monitoring server  '''
-    global OSTYPE, ip, mac, ts_alive, stop
+    global OSTYPE, ip, mac, ts_alive, stop, APVER
     todocode=0
     udp.unsent() # vana jama maha puhvrist
     d.doall()  #  di koik mis vaja, loeb tihti, raporteerib muutuste korral ja aeg-ajalt asynkroonselt
@@ -75,7 +84,46 @@ def comm_doall():
         #print('main: todo',todo) # debug
         p.todo_proc(todo) # execute other possible commands
 
-    if OSTYPE == 'techbaselinux': # special checks on npe
+    
+    ############### conn up or down issues ################
+    if udp.sk.get_state()[3] == 1: # restore now the variables from the server
+
+        try:
+            hw = hex(mb[0].read(1,257,1)[0]) # assuming it5888
+        except:
+            hw = 'n/a'
+
+        sendstring='AVV:HW '+hw+', APP '+APVER+'\nAVS:0'
+        #if 'rescue' in os.path.basename(__file__): #TODO muutuja teha alguses, mitte tsyklis
+        #    sendstring += '2' # critical service status
+        #else:
+        #    sendstring += '0'
+        sendstring += '\nTCW:?\n'  # traffic counter variable to be restored
+        ac.ask_counters()
+        log.info('******* uniscada connectivity up, sent AVV and tried to restore counters ********')
+        udp.udpsend(sendstring)
+
+
+    if udp.sk.get_state()[0] == 0 and HOSTNAME == 'd4c_controller': #  down, arange cold rebot if dc6888
+        if udp.sk.get_state()[1] > 300 + udp.sk.get_state()[2] * 300: # total 10 min down, cold reboot needed
+            # age and neverup taken into account from udp.sk statekeeper instance
+            msg = '**** going to cut power NOW (at '+str(int(time.time()))+') via 0xFEED in attempt to restore connectivity ***'
+            log.warning(msg)
+            with open("/root/d4c/appd.log", "a") as logfile:
+                logfile.write(msg)
+
+            time.sleep(1)
+            mb[0].write(1, 276, value = 0x0200) # delay to power cut
+            mb[0].write(1, 277, value = 0x0009) # pulse length just in case
+            mb[0].write(1, 999, value = 0xFEED) # ioboard ver > 2.35 cuts power to start cold reboot (see reg 277) # NO EFFECT??
+            #if that does not work, appd and python main* must be stopped, to cause 5V reset without 0xFEED functionality
+            # TODO lisa logi kirjutamine mis naitab, et toitekatkestust ei tekkinud
+            time.sleep(5)
+            p.subexec('/root/d4c/killapp',0) # to make sure power will be cut in the end
+            
+            
+            
+    if OSTYPE == 'techbaselinux': ###### special checks on npe   ##############
         if time.time() > ts_alive + 150: # time to fork another py_alive process
             print('******* marker time ********, ts_alive, time',ts_alive,time.time()) # debug
             mb[0].udpcomm(2,300,type='p')  # create marker process over socat containing sleep 300
@@ -146,22 +194,22 @@ def app_doall():
     global ts, LRW_ts
     try:
         LAWchange=0
-        LSW=s.get_value('LSW','dichannels') # bin ana selector / lighting sensors
-        SensorMode=LSW[2] # member 3 is sensor selector, 0=D, 1=A
-        LAW=s.get_value('LAW','aicochannels') # analogue light sensor and thresholds on off
+        #LSW=s.get_value('LSW','dichannels') # bin ana selector / lighting sensors
+        #SensorMode=LSW[2] # member 3 is sensor selector, 0=D, 1=A
+        #LAW=s.get_value('LAW','aicochannels') # analogue light sensor and thresholds on off
         LRW=s.get_value('LRW','dichannels') # lighting control, out sens cal remote
 
 
-        print('app_doall 0: LAW LSW LRW',LAW,LSW,LRW) # debug
+        #print('app_doall 0: LAW LSW LRW',LAW,LSW,LRW) # debug
 
-        if LAW[0] > LAW[2]: #switch off threshold crossed
-            s.set_membervalue('LSW',2,0,'dichannels') # sensor svs modified, analogue to binary, member 2!
-            LAWchange=1
-        elif LAW[0] < LAW[1]: # switch on threshold crossed
-            s.set_membervalue('LSW',2,1,'dichannels') #
-            LAWchange=1
-        if LAWchange > 0 and SensorMode >0: # reread LSW
-            LSW=s.get_value('LSW','dichannels') # LSW REREAD
+        #if LAW[0] > LAW[2]: #switch off threshold crossed
+        #    s.set_membervalue('LSW',2,0,'dichannels') # sensor svs modified, analogue to binary, member 2!
+        #    LAWchange=1
+        #elif LAW[0] < LAW[1]: # switch on threshold crossed
+        #    s.set_membervalue('LSW',2,1,'dichannels') #
+        #    LAWchange=1
+        #if LAWchange > 0 and SensorMode >0: # reread LSW
+        #    LSW=s.get_value('LSW','dichannels') # LSW REREAD
 
         #print('app_doall 1: LAW LSW LRW',LAW,LSW,LRW) # debug
 
@@ -186,7 +234,7 @@ def app_doall():
             LRW=s.get_value('LRW','dichannels') # LRW REREAD
             LRW_ts=ts
         
-        print('app_doall 3: LAW LSW LRW',LAW,LSW,LRW) # debug
+        #print('app_doall 3: LAW LSW LRW',LAW,LSW,LRW) # debug
 
     except:
         msg='main: app logic error!'
@@ -244,8 +292,8 @@ def io2test():
 import sys, os, time
 import logging
 logging.basicConfig(stream=sys.stderr, level=logging.INFO) # INFO
-logging.getLogger('acchannels').setLevel(logging.DEBUG) # ei moju?
-logging.getLogger('sqlgeneral').setLevel(logging.DEBUG) # yks esile kui kommenteerimata
+#logging.getLogger('acchannels').setLevel(logging.DEBUG) # ei moju?
+#logging.getLogger('sqlgeneral').setLevel(logging.DEBUG) # yks esile kui kommenteerimata
 #logging.getLogger('counter2power').setLevel(logging.DEBUG) # yks esile kui kommenteerimata
 log = logging.getLogger(__name__)
 
@@ -273,34 +321,17 @@ from droidcontroller.udp_commands import * # sellega alusta, kaivitab ka SQlgene
 p=Commands(OSTYPE) # setup and commands from server
 r=RegularComm(interval=120) # variables like uptime and traffic, not io channels
 
-mac_ip=['000000000000','127.0.0.1'] # dummy initial
-if HOSTNAME == 'server': # test linux
-    mac_ip=p.subexec('./getnetwork.sh',1).decode("utf-8").split(' ')
-elif HOSTNAME == 'olinuxino':
-    mac_ip=p.subexec('/root/d4c/getnetwork.sh',1).decode("utf-8").split(' ')
-elif HOSTNAME == 'techbase':
-    #mac_ip=p.subexec('/mnt/nand-user/d4c/getnetwork.sh',1).decode("utf-8").split(' ')
-    try:
-        mac_ip=mb[0].udpcomm(10,2,type='bs') # getnetwork.sh over socat. count = 2: mac ip
-        if mac_ip != None:
-            print('got from socat mac, ip',mac_ip)
-        else:
-            mac_ip=['000000000000','127.0.0.1']
-    except:
-        print('could not get mac_ip from getnetwork.sh over socat, using default')
-        mac_ip=['000000000000','127.0.0.1']
-        time.sleep(2)
-
-print('mac ip',mac_ip)
-mac = mac_ip[0]
-ip = mac_ip[1]
-r.set_host_ip(ip)
 mac = get_hostID('network.conf') # mac algusega reast
+ip='127.0.0.1' # ip = mac_ip[1] # FIXME arvestades dhcp ja vpn!
 
+if mac is None:
+    mac = ''
+    log.error('wrong mac!!! '+mac)
 
+r.set_host_ip(ip) # ip=mac_ip[1]
 udp.setID(mac) # env muutuja kaudu ehk parem?
 tcp.setID(mac) #
-udp.setIP('46.183.73.35')
+udp.setIP('195.222.15.51') # ('46.183.73.35') # mon server ip. only 195.222.15.51 has access to starman
 udp.setPort(44445)
 
 from droidcontroller.acchannels import * # ai and counters together
@@ -309,7 +340,7 @@ from droidcontroller.acchannels import * # ai and counters together
 from droidcontroller.dchannels import *
 
 # the following instances are subclasses of SQLgeneral. why?
-ac = ACchannels(readperiod = 3, sendperiod = 30) # counters, ai and ao, incl pwr # use 60?
+ac = ACchannels(readperiod = 3, sendperiod = 20) # 180) # counters, ai and ao, incl pwr # use 60?
 d = Dchannels(readperiod = 0, sendperiod = 180) # di and do. immediate notification, read as often as possible.
 
 s.check_setup('aicochannels')
@@ -317,21 +348,6 @@ s.check_setup('dichannels')
 #s.check_setup('counters')
 
 s.set_apver(APVER) # set version
-
-
-print('mac ip',mac_ip)
-# mac = get_hostID('network.conf') # mac algusega reast /  ettepoole
-ip = mac_ip[1]
-
-if mac is None:
-    mac = ''
-    log.error('wrong mac!!! '+mac)
-
-#r.set_host_ip(ip) # ip=mac_ip[1]
-#udp.setID(mac) # env muutuja kaudu ehk parem?
-#tcp.setID(mac) #
-#udp.setIP('195.222.15.51') # ('46.183.73.35') # mon server ip. only 195.222.15.51 has access to starman
-#udp.setPort(44445)
 
 
 ts=time.time() # needed for manual function testing
@@ -351,15 +367,15 @@ if __name__ == '__main__':
     while stop == 0: # endless loop
         ts=time.time() # global for functions
         comm_doall()  # communication with io and server
-        app_doall() # application rules and logic, via services if possible
-        crosscheck() # check for phase consumption failures
+        ##app_doall() # application rules and logic, via services if possible
+        #crosscheck() # check for phase consumption failures
         # #########################################
 
         if len(msg)>0:
             print(msg)
             udp.syslog(msg)
             msg=''
-        time.sleep(0.5)  # main loop takt 0.1, debug jaoks suurem / jookseb kinni kui viidet pole? subprocess?
-        #sys.stdout.write('.') # dot without newline for main loop
-        #sys.stdout.flush()
+        time.sleep(0.1)  # main loop takt 0.1, debug jaoks suurem / jookseb kinni kui viidet pole? subprocess?
+        sys.stdout.write('.') # dot without newline for main loop
+        sys.stdout.flush()
     # main loop end, exit from application
